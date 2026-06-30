@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca UniCesumar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9;}
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box;}
+        .btn { padding: 10px 15px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none;}
+        .btn-danger { background: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #0056b3; color: white; }
+        .alert-error { color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        .alert-success { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gestão de Livros - Biblioteca</h2>
+
+    <!-- Mensagens de Feedback -->
+    <div th:if="${erro}" class="alert-error" th:text="${erro}"></div>
+    <div th:if="${sucesso}" class="alert-success" th:text="${sucesso}"></div>
+
+    <!-- Formulário de Cadastro -->
+    <form th:action="@{/salvar}" th:object="${novoLivro}" method="post">
+        <div class="form-group">
+            <label>Título:</label>
+            <input type="text" th:field="*{titulo}" />
+        </div>
+        <div class="form-group">
+            <label>Autor:</label>
+            <input type="text" th:field="*{autor}" />
+        </div>
+        <div class="form-group">
+            <label>Ano de Publicação:</label>
+            <input type="number" th:field="*{ano}" />
+        </div>
+        <div class="form-group">
+            <label>ISBN:</label>
+            <input type="text" th:field="*{isbn}" />
+        </div>
+        <button type="submit" class="btn">Cadastrar Livro</button>
+    </form>
+
+    <hr style="margin: 30px 0;" />
+
+    <!-- Tabela de Livros -->
+    <h3>Lista de Livros Cadastrados</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Ano</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop iterando a lista de livros que veio do Controller -->
+        <tr th:each="livro : ${livros}">
+            <td th:text="${livro.isbn}"></td>
+            <td th:text="${livro.titulo}"></td>
+            <td th:text="${livro.autor}"></td>
+            <td th:text="${livro.ano}"></td>
+            <td>
+                <a th:href="@{/excluir/{id}(id=${livro.id})}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</a>
+            </td>
+        </tr>
+        <!-- Mensagem caso a lista esteja vazia -->
+        <tr th:if="${#lists.isEmpty(livros)}">
+            <td colspan="5" style="text-align: center;">Nenhum livro cadastrado.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
